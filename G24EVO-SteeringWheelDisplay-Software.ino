@@ -24,9 +24,9 @@ void setup() {
     // ledStrip.set_mutex(canController.get_mutex());
     
 
-    wheelButtons.begin();
+    // wheelButtons.begin();
     // canController.start();
-    xTaskCreate(wheelButtons.updateTask, "updateTask", 4096, &wheelButtons, 1, NULL);
+    // xTaskCreate(wheelButtons.updateTask, "updateTask", 4096, &wheelButtons, 1, NULL);
 }
 
 void loop(){ 

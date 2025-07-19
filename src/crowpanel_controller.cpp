@@ -1,5 +1,12 @@
 #include "../include/crowpanel_controller.hpp"
 
+uint32_t CrowPanelController::screenWidth;
+uint32_t CrowPanelController::screenHeight;
+lv_disp_draw_buf_t CrowPanelController::draw_buf;
+lv_color_t CrowPanelController::disp_draw_buf[800 * 480 / 10];
+lv_disp_drv_t CrowPanelController::disp_drv;
+lv_indev_drv_t CrowPanelController::indev_drv;
+
 CrowPanelController::CrowPanelController()
 {
     Wire.begin(19, 20);
