@@ -1,19 +1,14 @@
 #ifndef CAN_HPP
 #define CAN_HPP
 
-// CrowPanel 5.0" pin definitions
-#include "common/crowpanel_pins.h"
-
-// Use CrowPanel CAN pins (via external transceiver)
-#define RX_PIN CAN_RX_PIN  // GPIO 44 (UART1 RX)
-#define TX_PIN CAN_TX_PIN  // GPIO 43 (UART1 TX)
-
+#define RX_PIN 13
+#define TX_PIN 14
 #define POLLING_RATE_MS 5
 #define TRANSMIT_RATE_MS 20
 
 #include "driver/twai.h"
 #include "common/common_libraries.hpp"
-#include "display_manager.hpp"  // Changed from data_processor.hpp
+#include "data_processor.hpp"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 
@@ -26,9 +21,8 @@ public:
     void send_frame(twai_message_t message);
     twai_message_t createBoolMessage(bool b0, bool b1, bool b2, bool b3, bool b4, bool b5, bool b6, bool b7);
 
-    // Updated to use DisplayManager instead of DataProcessor
-    void set_display_manager(DisplayManager *display_manager) {
-        _display_manager = display_manager;
+    void set_data_proccessor(DataProcessor *data_processor) {
+        _data_processor = data_processor;
     }
 
     SemaphoreHandle_t get_mutex() {
@@ -42,7 +36,7 @@ public:
 
 private:
     twai_message_t _rx_message;
-    DisplayManager *_display_manager;  // Changed from DataProcessor
+    DataProcessor *_data_processor;
     SemaphoreHandle_t _mutex;
 };
 

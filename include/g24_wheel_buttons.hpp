@@ -3,37 +3,33 @@
 
 #include "common/common_libraries.hpp"
 #include "led_strip.hpp"
-#include "display_manager.hpp"
+#include "data_processor.hpp"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include "freertos/task.h"
 
 #include "can.hpp"
 
-// CrowPanel 5.0" pin assignments
-#include "common/crowpanel_pins.h"
+#define B1_PIN GPIO_NUM_2
+#define B2_PIN GPIO_NUM_4
+#define B3_PIN GPIO_NUM_42
+#define B4_PIN GPIO_NUM_40
 
-// Use CrowPanel pin definitions for wheel buttons
-#define B1_PIN WHEEL_B1_PIN
-#define B2_PIN WHEEL_B2_PIN  
-#define B3_PIN WHEEL_B3_PIN
-#define B4_PIN WHEEL_B4_PIN
+#define B1_LED_PIN GPIO_NUM_3
+#define B2_LED_PIN GPIO_NUM_5
+#define B3_LED_PIN GPIO_NUM_41
+#define B4_LED_PIN GPIO_NUM_39
 
-#define B1_LED_PIN WHEEL_B1_LED_PIN
-#define B2_LED_PIN WHEEL_B2_LED_PIN
-#define B3_LED_PIN WHEEL_B3_LED_PIN
-#define B4_LED_PIN WHEEL_B4_LED_PIN
+#define LEVA_IZQ_PIN GPIO_NUM_15 
+#define LEVA_DER_PIN GPIO_NUM_16
 
-#define LEVA_IZQ_PIN PADDLE_LEFT_PIN 
-#define LEVA_DER_PIN PADDLE_RIGHT_PIN
+#define E1_PIN_A GPIO_NUM_11
+#define E1_PIN_B GPIO_NUM_10
+#define E2_PIN_A GPIO_NUM_36
+#define E2_PIN_B GPIO_NUM_35
 
-#define E1_PIN_A ENCODER1_A_PIN
-#define E1_PIN_B ENCODER1_B_PIN
-#define E2_PIN_A ENCODER2_A_PIN
-#define E2_PIN_B ENCODER2_B_PIN
-
-#define E1_BUTTON_PIN ENCODER1_BTN_PIN
-#define E2_BUTTON_PIN ENCODER2_BTN_PIN
+#define E1_BUTTON_PIN GPIO_NUM_12
+#define E2_BUTTON_PIN GPIO_NUM_34
 
 class G24WheelButtons {
 public:
@@ -43,11 +39,11 @@ public:
     static void updateTask(void *arg);
     void set_can_controller(CAN *canController);
     void set_led_strip(LedStrip *ledStrip);
-    void set_display_manager(DisplayManager *displayManager);
+    void set_data_processor(DataProcessor *dataProcessor);
 
 private:
     LedStrip *_led_strip;
-    DisplayManager *_display_manager;
+    DataProcessor *_data_processor;
     void handleButtonPress(gpio_num_t buttonPin);
     void handleButtonRelease(gpio_num_t buttonPin);
     static void IRAM_ATTR handleEncoderInterrupt(void* arg);

@@ -126,7 +126,7 @@ void G24WheelButtons::update() {
         // Serial.println(brightnessCounter);
 
         if (displayCounter != lastDispayCounter){
-            _display_manager->change_display_page(displayCounter);
+            _data_processor->send_serial_change_display(displayCounter);
             lastDispayCounter = displayCounter;
         }
 
@@ -201,6 +201,6 @@ void  G24WheelButtons::set_led_strip(LedStrip *ledStrip){
     _led_strip = ledStrip;
 }
 
-void  G24WheelButtons::set_display_manager(DisplayManager *displayManager){
-    _display_manager = displayManager;
+void  G24WheelButtons::set_data_processor(DataProcessor *dataProcessor){
+    _data_processor = dataProcessor;
 }

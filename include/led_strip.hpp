@@ -3,8 +3,7 @@
 
 #include <Adafruit_NeoPixel.h>
 
-#include "common/crowpanel_pins.h"
-#define PIN_WS2812B LED_STRIP_PIN  // Use CrowPanel pin assignment
+#define PIN_WS2812B 6
 #define NUM_PIXELS 18 
 
 #define STOP_CAR_WARNING 1
