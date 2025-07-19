@@ -80,3 +80,7 @@ void DataProcessor::send_serial_change_display(int display){
     dato[9] = displayIDs[display];
     Serial.write(dato, 10);
 }
+
+void DataProcessor::send_serial_screen_test(int test) {
+    _crow_panel_controller->set_value_to_label(ui_rpm, test);
+}

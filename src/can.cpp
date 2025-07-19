@@ -62,21 +62,23 @@ twai_message_t CAN::createBoolMessage(bool b0, bool b1, bool b2, bool b3, bool b
 
 void CAN::listen() {
     if (xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
-        esp_err_t result = twai_receive(&_rx_message, pdMS_TO_TICKS(POLLING_RATE_MS));
-        if (result == ESP_OK) {
-            switch (_rx_message.data[0]) {
-                case 0:
-                    _data_processor->send_serial_frame_0(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
-                    break;
-                case 1:
-                    _data_processor->send_serial_frame_1(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
-                    break;
-                case 2:
-                    _data_processor->send_serial_frame_2(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
-                    break;
-                default:
-                    break;
-            }
+        test++;
+        _data_processor->send_serial_screen_test(test);
+        // esp_err_t result = twai_receive(&_rx_message, pdMS_TO_TICKS(POLLING_RATE_MS));
+        // if (result == ESP_OK) {
+        //     switch (_rx_message.data[0]) {
+        //         case 0:
+        //             _data_processor->send_serial_frame_0(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
+        //             break;
+        //         case 1:
+        //             _data_processor->send_serial_frame_1(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
+        //             break;
+        //         case 2:
+        //             _data_processor->send_serial_frame_2(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
+        //             break;
+        //         default:
+        //             break;
+        //     }
         // } else if (result == ESP_ERR_TIMEOUT) {
         //     Serial.println("Failed to receive message: ESP_ERR_TIMEOUT");
         //     // Handle timeout
@@ -100,5 +102,5 @@ void CAN::listen() {
         // Serial.print("RX Overrun: ");
         // Serial.println(status_info.rx_overrun_count);
         xSemaphoreGive(_mutex);
-    }
+
 }

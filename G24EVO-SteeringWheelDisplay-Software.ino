@@ -8,7 +8,7 @@
 #include <freertos/task.h>
 
 DataProcessor dataProcessor;
-// CAN canController;
+CAN canController;
 G24WheelButtons wheelButtons;
 LedStrip ledStrip;
 CrowPanelController crowPanelController;
@@ -16,8 +16,9 @@ int a = 0;
 
 void setup() {
     Serial.begin(115200);
-    // canController.set_data_proccessor(&dataProcessor);
-    // dataProcessor.set_led_strip(&ledStrip);
+    canController.set_data_proccessor(&dataProcessor);
+    dataProcessor.set_led_strip(&ledStrip);
+    dataProcessor.set_crow_panel_controller(&crowPanelController);
     // wheelButtons.set_led_strip(&ledStrip);
     // wheelButtons.set_can_controller(&canController);
     // wheelButtons.set_data_processor(&dataProcessor);
@@ -25,14 +26,12 @@ void setup() {
     
 
     // wheelButtons.begin();
-    // canController.start();
+    canController.start();
     // xTaskCreate(wheelButtons.updateTask, "updateTask", 4096, &wheelButtons, 1, NULL);
 }
 
 void loop(){ 
-    // canController.listen();
-    crowPanelController.set_value_to_label(ui_rpm, a);
-    a++;
+    canController.listen();
     lv_timer_handler();
     vTaskDelay(5);
 }

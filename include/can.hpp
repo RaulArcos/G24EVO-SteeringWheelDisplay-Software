@@ -38,6 +38,7 @@ private:
     twai_message_t _rx_message;
     DataProcessor *_data_processor;
     SemaphoreHandle_t _mutex;
+    int test = 0;
 };
 
 #endif

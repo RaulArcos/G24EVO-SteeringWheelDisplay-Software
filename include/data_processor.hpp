@@ -4,6 +4,7 @@
 #include "common/common_libraries.hpp"
 #include "common/display_id.hpp"
 #include "led_strip.hpp"
+#include "crowpanel_controller.hpp"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
@@ -17,12 +18,17 @@ public:
     void send_serial_frame_1(int lfws, int rfws, int lrws, int rrws, int maph, int mapl, int ect);
     void send_serial_frame_2(int lambh, int lambl, int lamth, int lamtl, int bvolth, int bvoltl, int iat);
     void send_serial_change_display(int display);
+    void send_serial_screen_test(int test);
     void set_led_strip(LedStrip *led_strip){
         _led_strip = led_strip;
+    }
+    void set_crow_panel_controller(CrowPanelController *crow_panel_controller) {
+        _crow_panel_controller = crow_panel_controller;
     }
 
 private:
     LedStrip *_led_strip;
+    CrowPanelController *_crow_panel_controller;
 };
 
 #endif
