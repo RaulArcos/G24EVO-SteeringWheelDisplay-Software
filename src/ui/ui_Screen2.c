@@ -43,13 +43,13 @@ void ui_Screen2_screen_init(void)
     ui_fuellabeltitle = lv_label_create(ui_fueltitlepanel);
     lv_obj_set_width(ui_fuellabeltitle, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_fuellabeltitle, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_fuellabeltitle, 2);
-    lv_obj_set_y(ui_fuellabeltitle, -2);
+    lv_obj_set_x(ui_fuellabeltitle, 9);
+    lv_obj_set_y(ui_fuellabeltitle, 0);
     lv_obj_set_align(ui_fuellabeltitle, LV_ALIGN_CENTER);
     lv_label_set_text(ui_fuellabeltitle, "WARM UP");
     lv_obj_set_style_text_letter_space(ui_fuellabeltitle, 4, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_line_space(ui_fuellabeltitle, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui_fuellabeltitle, &lv_font_montserrat_48, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_fuellabeltitle, &ui_font_Consolas60, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_PanelLambda = lv_obj_create(ui_Screen2);
     lv_obj_set_width(ui_PanelLambda, 379);
@@ -62,12 +62,11 @@ void ui_Screen2_screen_init(void)
     ui_lambda = lv_label_create(ui_PanelLambda);
     lv_obj_set_width(ui_lambda, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_lambda, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_lambda, 49);
-    lv_obj_set_y(ui_lambda, -6);
+    lv_obj_set_x(ui_lambda, 55);
+    lv_obj_set_y(ui_lambda, 0);
     lv_obj_set_align(ui_lambda, LV_ALIGN_CENTER);
     lv_label_set_text(ui_lambda, "0.923");
-    lv_obj_set_style_text_font(ui_lambda, &lv_font_montserrat_48, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_transform_zoom(ui_lambda, 350, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_lambda, &ui_font_Consolas60, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_LambdaLabel = lv_label_create(ui_PanelLambda);
     lv_obj_set_width(ui_LambdaLabel, LV_SIZE_CONTENT);   /// 1
@@ -91,12 +90,11 @@ void ui_Screen2_screen_init(void)
     ui_lambdatarget = lv_label_create(ui_PanelLambdatarget);
     lv_obj_set_width(ui_lambdatarget, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_lambdatarget, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_lambdatarget, 47);
-    lv_obj_set_y(ui_lambdatarget, -10);
+    lv_obj_set_x(ui_lambdatarget, 71);
+    lv_obj_set_y(ui_lambdatarget, -1);
     lv_obj_set_align(ui_lambdatarget, LV_ALIGN_CENTER);
     lv_label_set_text(ui_lambdatarget, "1.042");
-    lv_obj_set_style_text_font(ui_lambdatarget, &lv_font_montserrat_48, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_transform_zoom(ui_lambdatarget, 350, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_lambdatarget, &ui_font_Consolas60, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_LambdaLabel1 = lv_label_create(ui_PanelLambdatarget);
     lv_obj_set_width(ui_LambdaLabel1, LV_SIZE_CONTENT);   /// 1
@@ -135,7 +133,7 @@ void ui_Screen2_screen_init(void)
     lv_obj_set_y(ui_fuel, -1);
     lv_obj_set_align(ui_fuel, LV_ALIGN_CENTER);
     lv_label_set_text(ui_fuel, "28.4");
-    lv_obj_set_style_text_font(ui_fuel, &lv_font_montserrat_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_fuel, &ui_font_Consolas35, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_PaneLCorrlamb = lv_obj_create(ui_Screen2);
     lv_obj_set_width(ui_PaneLCorrlamb, 374);
@@ -163,7 +161,7 @@ void ui_Screen2_screen_init(void)
     lv_obj_set_y(ui_correctionlambda, -1);
     lv_obj_set_align(ui_correctionlambda, LV_ALIGN_CENTER);
     lv_label_set_text(ui_correctionlambda, "4.75");
-    lv_obj_set_style_text_font(ui_correctionlambda, &lv_font_montserrat_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_correctionlambda, &ui_font_Consolas35, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_PanelETC2 = lv_obj_create(ui_Screen2);
     lv_obj_set_width(ui_PanelETC2, 377);
@@ -176,12 +174,11 @@ void ui_Screen2_screen_init(void)
     ui_ect2 = lv_label_create(ui_PanelETC2);
     lv_obj_set_width(ui_ect2, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_ect2, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_ect2, 98);
-    lv_obj_set_y(ui_ect2, -11);
+    lv_obj_set_x(ui_ect2, 100);
+    lv_obj_set_y(ui_ect2, -2);
     lv_obj_set_align(ui_ect2, LV_ALIGN_CENTER);
     lv_label_set_text(ui_ect2, "80");
     lv_obj_set_style_text_font(ui_ect2, &lv_font_montserrat_48, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_transform_zoom(ui_ect2, 350, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_ECTlabel2 = lv_label_create(ui_PanelETC2);
     lv_obj_set_width(ui_ECTlabel2, LV_SIZE_CONTENT);   /// 1
