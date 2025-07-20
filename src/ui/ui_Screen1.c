@@ -3,7 +3,7 @@
 // LVGL version: 8.3.6
 // Project name: SquareLine_Project
 
-#include "../../../include/ui/ui.h"
+#include "../../include/ui/ui.h"
 
 lv_obj_t * ui_Screen1 = NULL;
 lv_obj_t * ui_PanelGear = NULL;
