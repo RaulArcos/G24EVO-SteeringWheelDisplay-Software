@@ -7,8 +7,9 @@
 #include "../include/can.hpp"
 
 void CAN::start() {
-    twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT((gpio_num_t)TX_PIN, (gpio_num_t)RX_PIN, TWAI_MODE_NORMAL);
-    twai_timing_config_t t_config = TWAI_TIMING_CONFIG_125KBITS();
+    Serial.println("Starting CAN Controller...");
+    twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT((gpio_num_t)TX_PIN, (gpio_num_t)RX_PIN, TWAI_MODE_LISTEN_ONLY);
+    twai_timing_config_t t_config = TWAI_TIMING_CONFIG_1MBITS();
     twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 
     esp_err_t install_status = twai_driver_install(&g_config, &t_config, &f_config);
@@ -64,6 +65,7 @@ void CAN::listen() {
     if (xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
         esp_err_t result = twai_receive(&_rx_message, pdMS_TO_TICKS(POLLING_RATE_MS));
         if (result == ESP_OK) {
+            Serial.print("Received message");
             switch (_rx_message.data[0]) {
                 case 0:
                     _data_processor->send_serial_frame_0(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);

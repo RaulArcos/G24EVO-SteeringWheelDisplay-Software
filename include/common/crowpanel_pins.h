@@ -5,9 +5,6 @@
 // CrowPanel 5.0" ESP32-S3 Pin Definitions
 // =============================================================================
 
-// CAN Interface (via external transceiver on UART1)
-#define CAN_TX_PIN          43  // UART1 TX
-#define CAN_RX_PIN          44  // UART1 RX
 
 // Display Interface (RGB Parallel) - Reserved, do not use
 #define TFT_DE_PIN          40
@@ -34,7 +31,7 @@
 #define GPIO_AVAILABLE_3    8   // Available for buttons
 #define GPIO_AVAILABLE_4    9   // Available for buttons
 #define GPIO_AVAILABLE_5    10  // Available for buttons
-#define GPIO_AVAILABLE_6    11  // Available for buttons
+// #define GPIO_AVAILABLE_6    11  // Available for 
 #define GPIO_AVAILABLE_7    12  // Available for buttons
 #define GPIO_AVAILABLE_8    13  // Available for buttons
 
@@ -46,7 +43,7 @@
 #define GPIO_AVAILABLE_13   35  // Alternative GPIO
 #define GPIO_AVAILABLE_14   36  // Alternative GPIO
 #define GPIO_AVAILABLE_15   37  // Alternative GPIO
-#define GPIO_AVAILABLE_16   38  // Alternative GPIO
+// #define GPIO_AVAILABLE_16   38  // Alternative GPIO
 
 // Power pins
 #define POWER_3V3           3.3  // 3.3V supply

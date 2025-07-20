@@ -12,10 +12,11 @@ CAN canController;
 G24WheelButtons wheelButtons;
 LedStrip ledStrip;
 CrowPanelController crowPanelController;
-int a = 0;
 
 void setup() {
     Serial.begin(115200);
+    while (!Serial) { delay(10); }
+    Serial.println("Starting setup...");
     canController.set_data_proccessor(&dataProcessor);
     dataProcessor.set_led_strip(&ledStrip);
     dataProcessor.set_crow_panel_controller(&crowPanelController);
@@ -23,10 +24,12 @@ void setup() {
     // wheelButtons.set_can_controller(&canController);
     // wheelButtons.set_data_processor(&dataProcessor);
     // ledStrip.set_mutex(canController.get_mutex());
+
+    canController.start();
     
 
     // wheelButtons.begin();
-    canController.start();
+   
     // xTaskCreate(wheelButtons.updateTask, "updateTask", 4096, &wheelButtons, 1, NULL);
 }
 

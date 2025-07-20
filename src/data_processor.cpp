@@ -19,9 +19,10 @@ void DataProcessor::send_serial_frame_0(int rpmh, int rpml, int tpsh, int tpsl, 
     int rpm = (rpmh * 256) + rpml; 
     int tps = (tpsh * 256) + tpsl; 
     int ect = (ecth * 256) + ectl; 
-    int gear = gear;
-    _led_strip->set_rpm(rpm);
+    // _led_strip->set_rpm(rpm);
     _crow_panel_controller->set_value_to_label(ui_ect, ect);
+    Serial.println("Sending frame 0");
+    Serial.println(ect);
 }
 
 void DataProcessor::send_serial_frame_1(int brkh, int brkl, int lrws, int rrws, int maph, int mapl, int brk){
