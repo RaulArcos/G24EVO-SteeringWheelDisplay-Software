@@ -16,31 +16,12 @@ void DataProcessor::send_serial(byte type, unsigned int value) {                
 }
 
 void DataProcessor::send_serial_frame_0(int rpmh, int rpml, int tpsh, int tpsl, int ecth, int ectl, int gear){
-    byte dato[8] = { 0x5A, 0xA5, 0x05, 0x82, 0x00, 0x00, 0x00, 0x00 };
-    dato[4] = RPM_ID;
-    dato[6] = rpmh & 0xFF;
-    dato[7] = rpml & 0xFF;
-    Serial.write(dato, 8);
-    _led_strip->set_rpm(rpmh*256 + rpml);
-
-
-    dato[4] = TPS_ID;
-    dato[6] = tpsh & 0xFF;
-    dato[7] = tpsl & 0xFF;
-    Serial.write(dato, 8);
-    // Serial.println(tpsh*256 + tpsl);
-    // _led_strip->set_rpm((tpsh*256 + tpsl));
-    // Serial.println(tpsh*256 + tpsl);
-
-    dato[4] = ECT_IN_ID;
-    dato[6] = ecth & 0xFF;
-    dato[7] = ectl & 0xFF;
-    Serial.write(dato, 8);
-
-    dato[4] = GEAR_ID;
-    dato[6] = gear & 0xFF;
-    dato[7] = 0;
-    Serial.write(dato, 8);
+    int rpm = (rpmh * 256) + rpml; 
+    int tps = (tpsh * 256) + tpsl; 
+    int ect = (ecth * 256) + ectl; 
+    int gear = gear;
+    _led_strip->set_rpm(rpm);
+    _crow_panel_controller->set_value_to_label(ui_ect, ect);
 }
 
 void DataProcessor::send_serial_frame_1(int brkh, int brkl, int lrws, int rrws, int maph, int mapl, int brk){

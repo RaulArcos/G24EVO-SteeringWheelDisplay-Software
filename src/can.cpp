@@ -62,45 +62,44 @@ twai_message_t CAN::createBoolMessage(bool b0, bool b1, bool b2, bool b3, bool b
 
 void CAN::listen() {
     if (xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
-        test++;
-        _data_processor->send_serial_screen_test(test);
-        // esp_err_t result = twai_receive(&_rx_message, pdMS_TO_TICKS(POLLING_RATE_MS));
-        // if (result == ESP_OK) {
-        //     switch (_rx_message.data[0]) {
-        //         case 0:
-        //             _data_processor->send_serial_frame_0(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
-        //             break;
-        //         case 1:
-        //             _data_processor->send_serial_frame_1(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
-        //             break;
-        //         case 2:
-        //             _data_processor->send_serial_frame_2(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
-        //             break;
-        //         default:
-        //             break;
-        //     }
-        // } else if (result == ESP_ERR_TIMEOUT) {
-        //     Serial.println("Failed to receive message: ESP_ERR_TIMEOUT");
-        //     // Handle timeout
-        // } else {
-        //     Serial.print("Failed to receive message: ");
-        //     Serial.println(esp_err_to_name(result));
-        //     // Handle other errors
+        esp_err_t result = twai_receive(&_rx_message, pdMS_TO_TICKS(POLLING_RATE_MS));
+        if (result == ESP_OK) {
+            switch (_rx_message.data[0]) {
+                case 0:
+                    _data_processor->send_serial_frame_0(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
+                    break;
+                // case 1:
+                //     _data_processor->send_serial_frame_1(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
+                //     break;
+                // case 2:
+                //     _data_processor->send_serial_frame_2(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
+                //     break;
+                default:
+                    break;
+            }
+        } else if (result == ESP_ERR_TIMEOUT) {
+            Serial.println("Failed to receive message: ESP_ERR_TIMEOUT");
+            // Handle timeout
+        } else {
+            Serial.print("Failed to receive message: ");
+            Serial.println(esp_err_to_name(result));
+            // Handle other errors
         }
+    }
 
-        // // Check TWAI status
-        // twai_status_info_t status_info;
-        // twai_get_status_info(&status_info);
-        // Serial.print("Bus Errors: ");
-        // Serial.println(status_info.bus_error_count);
-        // Serial.print("TX Errors: ");
-        // Serial.println(status_info.tx_error_counter);
-        // Serial.print("RX Errors: ");
-        // Serial.println(status_info.rx_error_counter);
-        // Serial.print("RX Missed: ");
-        // Serial.println(status_info.rx_missed_count);
-        // Serial.print("RX Overrun: ");
-        // Serial.println(status_info.rx_overrun_count);
+        // Check TWAI status
+        twai_status_info_t status_info;
+        twai_get_status_info(&status_info);
+        Serial.print("Bus Errors: ");
+        Serial.println(status_info.bus_error_count);
+        Serial.print("TX Errors: ");
+        Serial.println(status_info.tx_error_counter);
+        Serial.print("RX Errors: ");
+        Serial.println(status_info.rx_error_counter);
+        Serial.print("RX Missed: ");
+        Serial.println(status_info.rx_missed_count);
+        Serial.print("RX Overrun: ");
+        Serial.println(status_info.rx_overrun_count);
         xSemaphoreGive(_mutex);
 
 }
