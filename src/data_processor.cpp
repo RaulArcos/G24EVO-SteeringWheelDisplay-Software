@@ -83,4 +83,5 @@ void DataProcessor::send_serial_change_display(int display){
 
 void DataProcessor::send_serial_screen_test(int test) {
     _crow_panel_controller->set_value_to_label(ui_rpm, test);
+    Serial.println(test);
 }
