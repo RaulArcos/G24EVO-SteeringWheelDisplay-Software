@@ -6,15 +6,18 @@
 
 #include "../include/can.hpp"
 
+static bool driver_installed = false;
+
 void CAN::start() {
     Serial.println("Starting CAN Controller...");
-    twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT((gpio_num_t)TX_PIN, (gpio_num_t)RX_PIN, TWAI_MODE_LISTEN_ONLY);
-    twai_timing_config_t t_config = TWAI_TIMING_CONFIG_1MBITS();
+    twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT((gpio_num_t)TX_PIN, (gpio_num_t)RX_PIN, TWAI_MODE_NORMAL);
+    twai_timing_config_t t_config = TWAI_TIMING_CONFIG_125KBITS();
     twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 
     esp_err_t install_status = twai_driver_install(&g_config, &t_config, &f_config);
     if (install_status != ESP_OK) {
         Serial.println("Failed to install TWAI driver");
+        driver_installed = false;
         return;
     } else {
         Serial.println("TWAI driver installed");
@@ -23,23 +26,91 @@ void CAN::start() {
     esp_err_t start_status = twai_start();
     if (start_status != ESP_OK) {
         Serial.println("Failed to start TWAI driver");
+        driver_installed = false;
         return;
     } else {
         Serial.println("TWAI driver started");
     }
 
-    // Reconfigure alerts
+    // Reconfigure alerts to detect frame receive, Bus-Off error and RX queue full states
     uint32_t alerts_to_enable = TWAI_ALERT_RX_DATA | TWAI_ALERT_ERR_PASS | TWAI_ALERT_BUS_ERROR | TWAI_ALERT_RX_QUEUE_FULL;
     if (twai_reconfigure_alerts(alerts_to_enable, NULL) == ESP_OK) {
         Serial.println("CAN Alerts reconfigured");
     } else {
         Serial.println("Failed to reconfigure alerts");
+        driver_installed = false;
+        return;
     }
+
+    // TWAI driver is now successfully installed and started
+    driver_installed = true;
 }
 
 CAN::~CAN() {
-    twai_stop();
-    twai_driver_uninstall();
+    stop_listening_task();
+    if (driver_installed) {
+        twai_stop();
+        twai_driver_uninstall();
+        driver_installed = false;
+    }
+}
+
+void CAN::start_listening_task() {
+    if (_listen_task_handle == NULL) {
+        _should_stop_listening = false;
+        
+        // Option 1: Regular task creation
+        BaseType_t result = xTaskCreate(
+            listenTask,           // Task function
+            "CAN_Listen_Task",    // Task name
+            4096,                 // Stack size (words)
+            this,                 // Task parameter (this CAN instance)
+            1,                    // Priority (lowered from 5 to 1)
+            &_listen_task_handle  // Task handle
+        );
+        
+        // Option 2: Pin to specific core (uncomment to use)
+        // BaseType_t result = xTaskCreatePinnedToCore(
+        //     listenTask,           // Task function
+        //     "CAN_Listen_Task",    // Task name
+        //     4096,                 // Stack size (words)
+        //     this,                 // Task parameter (this CAN instance)
+        //     1,                    // Priority
+        //     &_listen_task_handle, // Task handle
+        //     0                     // Core 0 (main loop typically runs on Core 1)
+        // );
+        
+        if (result == pdPASS) {
+            Serial.println("CAN listening task created successfully");
+        } else {
+            Serial.println("Failed to create CAN listening task");
+            _listen_task_handle = NULL;
+        }
+    } else {
+        Serial.println("CAN listening task already running");
+    }
+}
+
+void CAN::stop_listening_task() {
+    if (_listen_task_handle != NULL) {
+        _should_stop_listening = true;
+        
+        // Wait for task to finish (max 1 second)
+        for (int i = 0; i < 100; i++) {
+            if (_listen_task_handle == NULL) {
+                break;
+            }
+            vTaskDelay(pdMS_TO_TICKS(10));
+        }
+        
+        // Force delete if still running
+        if (_listen_task_handle != NULL) {
+            vTaskDelete(_listen_task_handle);
+            _listen_task_handle = NULL;
+        }
+        
+        Serial.println("CAN listening task stopped");
+    }
 }
 
 void CAN::send_frame(twai_message_t message) {
@@ -62,46 +133,102 @@ twai_message_t CAN::createBoolMessage(bool b0, bool b1, bool b2, bool b3, bool b
 }
 
 void CAN::listen() {
-    if (xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
-        esp_err_t result = twai_receive(&_rx_message, pdMS_TO_TICKS(POLLING_RATE_MS));
-        if (result == ESP_OK) {
-            Serial.print("Received message");
-            switch (_rx_message.data[0]) {
-                case 0:
-                    _data_processor->send_serial_frame_0(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
-                    break;
-                // case 1:
-                //     _data_processor->send_serial_frame_1(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
-                //     break;
-                // case 2:
-                //     _data_processor->send_serial_frame_2(_rx_message.data[1], _rx_message.data[2], _rx_message.data[3], _rx_message.data[4], _rx_message.data[5], _rx_message.data[6], _rx_message.data[7]);
-                //     break;
-                default:
-                    break;
-            }
-        } else if (result == ESP_ERR_TIMEOUT) {
-            Serial.println("Failed to receive message: ESP_ERR_TIMEOUT");
-            // Handle timeout
-        } else {
-            Serial.print("Failed to receive message: ");
-            Serial.println(esp_err_to_name(result));
-            // Handle other errors
+    Serial.println("CAN listening task started");
+    
+    // Continuous loop for the thread
+    while (!_should_stop_listening) {
+        if (!driver_installed) {
+            // Driver not installed
+            vTaskDelay(pdMS_TO_TICKS(1000));
+            continue;
         }
+
+        // Check if alert happened
+        uint32_t alerts_triggered;
+        twai_read_alerts(&alerts_triggered, pdMS_TO_TICKS(1000)); // Reduced timeout for more responsiveness
+        twai_status_info_t twaistatus;
+        twai_get_status_info(&twaistatus);
+
+        // Handle alerts
+        if (alerts_triggered & TWAI_ALERT_ERR_PASS) {
+            Serial.println("Alert: TWAI controller has become error passive.");
+        }
+        if (alerts_triggered & TWAI_ALERT_BUS_ERROR) {
+            Serial.println("Alert: A (Bit, Stuff, CRC, Form, ACK) error has occurred on the bus.");
+            Serial.printf("Bus error count: %lu\n", twaistatus.bus_error_count);
+        }
+        if (alerts_triggered & TWAI_ALERT_RX_QUEUE_FULL) {
+            Serial.println("Alert: The RX queue is full causing a received frame to be lost.");
+            Serial.printf("RX buffered: %lu\t", twaistatus.msgs_to_rx);
+            Serial.printf("RX missed: %lu\t", twaistatus.rx_missed_count);
+            Serial.printf("RX overrun %lu\n", twaistatus.rx_overrun_count);
+        }
+
+        // Check if message is received
+        if (alerts_triggered & TWAI_ALERT_RX_DATA) {
+            // One or more messages received. Handle all.
+            twai_message_t message;
+            int message_count = 0;
+            while (twai_receive(&message, 0) == ESP_OK && !_should_stop_listening) {
+                // Check if all data bytes are zero - if so, ignore this message
+                bool all_zeros = true;
+                for (int i = 0; i < message.data_length_code; i++) {
+                    if (message.data[i] != 0) {
+                        all_zeros = false;
+                        break;
+                    }
+                }
+                
+                // Skip processing if all bytes are zero
+                if (all_zeros) {
+                    Serial.println("Ignoring message with all zero data");
+                    taskYIELD();
+                    continue;
+                }
+                
+                if (message.extd) {
+                    Serial.println("Extended Format");
+                } else {
+                    Serial.println("Standard Format");
+                }
+                Serial.printf("ID: %lx\nByte:", message.identifier);
+                if (!(message.rtr)) {
+                    for (int i = 0; i < message.data_length_code; i++) {
+                        Serial.printf(" %d = %02x,", i, message.data[i]);
+                    }
+                    Serial.println("");
+                    
+                    // Send to data processor based on first byte (maintaining original logic)
+                    switch (message.data[0]) {
+                        case 0:
+                            _data_processor->send_serial_frame_0(message.data[1], message.data[2], message.data[3], message.data[4], message.data[5], message.data[6], message.data[7]);
+                            break;
+                        case 1:
+                            _data_processor->send_serial_frame_1(message.data[1], message.data[2], message.data[3], message.data[4], message.data[5], message.data[6], message.data[7]);
+                            break;
+                        // case 2:
+                        //     _data_processor->send_serial_frame_2(message.data[1], message.data[2], message.data[3], message.data[4], message.data[5], message.data[6], message.data[7]);
+                        //     break;
+                        default:
+                            break;
+                    }
+                }
+                
+                taskYIELD();
+            }
+        }
+
+        // Optional: Print status periodically (can be commented out for production)
+        // Serial.printf("TX Errors: %lu, RX Errors: %lu\n", twaistatus.tx_error_counter, twaistatus.rx_error_counter);
+        
+        // Yield to other tasks more frequently
+        taskYIELD();
+        
+        // Small delay to prevent task from consuming too much CPU
+        vTaskDelay(pdMS_TO_TICKS(5)); // Increased from 10ms to 50ms for better cooperation
     }
-
-        // Check TWAI status
-        twai_status_info_t status_info;
-        twai_get_status_info(&status_info);
-        Serial.print("Bus Errors: ");
-        Serial.println(status_info.bus_error_count);
-        Serial.print("TX Errors: ");
-        Serial.println(status_info.tx_error_counter);
-        Serial.print("RX Errors: ");
-        Serial.println(status_info.rx_error_counter);
-        Serial.print("RX Missed: ");
-        Serial.println(status_info.rx_missed_count);
-        Serial.print("RX Overrun: ");
-        Serial.println(status_info.rx_overrun_count);
-        xSemaphoreGive(_mutex);
-
+    
+    Serial.println("CAN listening task ending");
+    _listen_task_handle = NULL;
+    vTaskDelete(NULL); // Delete this task
 }

@@ -58,7 +58,20 @@ void CrowPanelController::my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *ar
     lv_disp_flush_ready(disp);
 }
 
-void CrowPanelController::set_value_to_label(lv_obj_t *label, int value)
+void CrowPanelController::set_value_to_label(lv_obj_t *label, double value)
 {
-    lv_label_set_text_fmt(label, "%d", value);
+    Serial.println("set_value_to_label");
+    if (value == (int)value) {
+        lv_label_set_text_fmt(label, "%d", (int)value);
+    } else {
+        char buffer[10];
+        snprintf(buffer, sizeof(buffer), "%.2f", value);
+        lv_label_set_text(label, buffer);
+    }
+}
+
+void CrowPanelController::change_screen(lv_obj_t *screen){
+    if (screen != NULL) {
+        lv_disp_load_scr(screen);
+    }
 }

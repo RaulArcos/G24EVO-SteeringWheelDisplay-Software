@@ -11,13 +11,16 @@
 #include "data_processor.hpp"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
+#include "freertos/task.h"
 
 class CAN {
 public:
-    CAN(): _mutex(xSemaphoreCreateMutex()) {}
+    CAN(): _mutex(xSemaphoreCreateMutex()), _listen_task_handle(NULL), _should_stop_listening(false) {}
     ~CAN();
     void start();
     void listen();
+    void start_listening_task();
+    void stop_listening_task();
     void send_frame(twai_message_t message);
     twai_message_t createBoolMessage(bool b0, bool b1, bool b2, bool b3, bool b4, bool b5, bool b6, bool b7);
 
@@ -38,6 +41,8 @@ private:
     twai_message_t _rx_message;
     DataProcessor *_data_processor;
     SemaphoreHandle_t _mutex;
+    TaskHandle_t _listen_task_handle;
+    volatile bool _should_stop_listening;
     int test = 0;
 };
 

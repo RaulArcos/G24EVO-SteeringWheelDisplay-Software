@@ -26,6 +26,7 @@ void setup() {
     // ledStrip.set_mutex(canController.get_mutex());
 
     canController.start();
+    canController.start_listening_task();
     
 
     // wheelButtons.begin();
@@ -34,7 +35,8 @@ void setup() {
 }
 
 void loop(){ 
-    canController.listen();
+    // canController.listen();
     lv_timer_handler();
     vTaskDelay(5);
+    Serial.println("loop");
 }

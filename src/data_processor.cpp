@@ -15,28 +15,43 @@ void DataProcessor::send_serial(byte type, unsigned int value) {                
     Serial.write(dato, 8);                                              //Se envía serialmente el mensaje, indicando su longituden bytes para ello.
 }
 
-void DataProcessor::send_serial_frame_0(int rpmh, int rpml, int tpsh, int tpsl, int ecth, int ectl, int gear){
+//RPM + TPS + vBatt + ECT
+void DataProcessor::send_serial_frame_0(int rpmh, int rpml, int tpsh, int tpsl, int vbatth, int vbattl, int ect){
+    Serial.println("send_serial_frame_0");
+    Serial.println(rpmh);
+    Serial.println(rpml);
+    Serial.println(tpsh);
+    Serial.println(tpsl);
+    Serial.println(vbatth);
+    Serial.println(vbattl);
+    Serial.println(ect);
+
+    
     int rpm = (rpmh * 256) + rpml; 
     int tps = (tpsh * 256) + tpsl; 
-    int ect = (ecth * 256) + ectl; 
-    // _led_strip->set_rpm(rpm);
+    double vbatt = ((vbatth * 256) + vbattl) /100.0; 
+
+    Serial.println(vbatt);
+    
+    //TODO: TPS
+    _crow_panel_controller->set_value_to_label(ui_rpm, rpm);
+    _crow_panel_controller->set_value_to_label(ui_battvolt, vbatt);
     _crow_panel_controller->set_value_to_label(ui_ect, ect);
-    Serial.println("Sending frame 0");
-    Serial.println(ect);
+    _crow_panel_controller->set_value_to_label(ui_ect2, ect);
 }
 
-void DataProcessor::send_serial_frame_1(int brkh, int brkl, int lrws, int rrws, int maph, int mapl, int brk){
-    byte dato[8] = { 0x5A, 0xA5, 0x05, 0x82, 0x00, 0x00, 0x00, 0x00 };
-    dato[4] = MAP_ID;
-    dato[6] = maph & 0xFF;
-    dato[7] = mapl & 0xFF;
-    Serial.write(dato, 8);
-
-    dato[4] = BPS_ID;
-    dato[6] = brkh & 0xFF;
-    dato[6] = brkl & 0xFF;
-    Serial.write(dato, 8);
+//LAMB + LAMBTRG + FUEL + GEAR
+void DataProcessor::send_serial_frame_1(int lmbh, int lmbl, int lmbth, int lmbtl, int fuelh, int fuell, int gear){
+    Serial.println("send_serial_frame_1");
+   int lmb = (lmbh * 256) + lmbl;
+   int lmbtrg = (lmbth * 256) + lmbtl;
+   int fuel = (fuelh * 256) + fuell;
+   _crow_panel_controller->set_value_to_label(ui_lambda, lmb);
+   _crow_panel_controller->set_value_to_label(ui_lambdatarget, lmbtrg);
+   _crow_panel_controller->set_value_to_label(ui_fuel, fuel);
+   _crow_panel_controller->set_value_to_label(ui_gear, gear);
 }
+
 
 void DataProcessor::send_serial_frame_2(int lambh, int lambl, int lamth, int lamtl, int bvolth, int bvoltl, int iat){
     byte dato[8] = { 0x5A, 0xA5, 0x05, 0x82, 0x00, 0x00, 0x00, 0x00 };
