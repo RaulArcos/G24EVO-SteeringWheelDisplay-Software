@@ -35,7 +35,7 @@ void setup() {
 }
 
 void loop(){ 
-    // canController.listen();
+
     lv_timer_handler();
     vTaskDelay(5);
     Serial.println("loop");

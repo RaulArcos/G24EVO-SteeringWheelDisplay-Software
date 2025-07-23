@@ -32,7 +32,6 @@ void CAN::start() {
         Serial.println("TWAI driver started");
     }
 
-    // Reconfigure alerts to detect frame receive, Bus-Off error and RX queue full states
     uint32_t alerts_to_enable = TWAI_ALERT_RX_DATA | TWAI_ALERT_ERR_PASS | TWAI_ALERT_BUS_ERROR | TWAI_ALERT_RX_QUEUE_FULL;
     if (twai_reconfigure_alerts(alerts_to_enable, NULL) == ESP_OK) {
         Serial.println("CAN Alerts reconfigured");
@@ -59,7 +58,6 @@ void CAN::start_listening_task() {
     if (_listen_task_handle == NULL) {
         _should_stop_listening = false;
         
-        // Option 1: Regular task creation
         BaseType_t result = xTaskCreate(
             listenTask,           // Task function
             "CAN_Listen_Task",    // Task name
@@ -69,7 +67,6 @@ void CAN::start_listening_task() {
             &_listen_task_handle  // Task handle
         );
         
-        // Option 2: Pin to specific core (uncomment to use)
         // BaseType_t result = xTaskCreatePinnedToCore(
         //     listenTask,           // Task function
         //     "CAN_Listen_Task",    // Task name
@@ -164,13 +161,10 @@ void CAN::listen() {
             Serial.printf("RX overrun %lu\n", twaistatus.rx_overrun_count);
         }
 
-        // Check if message is received
         if (alerts_triggered & TWAI_ALERT_RX_DATA) {
-            // One or more messages received. Handle all.
             twai_message_t message;
             int message_count = 0;
             while (twai_receive(&message, 0) == ESP_OK && !_should_stop_listening) {
-                // Check if all data bytes are zero - if so, ignore this message
                 bool all_zeros = true;
                 for (int i = 0; i < message.data_length_code; i++) {
                     if (message.data[i] != 0) {
@@ -179,7 +173,6 @@ void CAN::listen() {
                     }
                 }
                 
-                // Skip processing if all bytes are zero
                 if (all_zeros) {
                     Serial.println("Ignoring message with all zero data");
                     taskYIELD();
@@ -218,14 +211,8 @@ void CAN::listen() {
             }
         }
 
-        // Optional: Print status periodically (can be commented out for production)
-        // Serial.printf("TX Errors: %lu, RX Errors: %lu\n", twaistatus.tx_error_counter, twaistatus.rx_error_counter);
-        
-        // Yield to other tasks more frequently
         taskYIELD();
-        
-        // Small delay to prevent task from consuming too much CPU
-        vTaskDelay(pdMS_TO_TICKS(5)); // Increased from 10ms to 50ms for better cooperation
+        vTaskDelay(pdMS_TO_TICKS(5));
     }
     
     Serial.println("CAN listening task ending");

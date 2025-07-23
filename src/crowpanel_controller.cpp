@@ -60,7 +60,6 @@ void CrowPanelController::my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *ar
 
 void CrowPanelController::set_value_to_label(lv_obj_t *label, double value)
 {
-    Serial.println("set_value_to_label");
     if (value == (int)value) {
         lv_label_set_text_fmt(label, "%d", (int)value);
     } else {
