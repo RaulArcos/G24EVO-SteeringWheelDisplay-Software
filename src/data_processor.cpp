@@ -47,35 +47,158 @@ void DataProcessor::send_serial_frame_2(int shut, int fan, int lmbch, int lmbcl,
     int lmbcorrect = (lmbch * 256) + lmbcl;
     int brake = (brakeh * 256) + brakel;
 
-    _crow_panel_controller->set_value_to_label(ui_shutdown, shut);
-    _crow_panel_controller->set_value_to_label(ui_fan, fan);
+    char shut_str[10];
+    char fan_str[10];
+    char aux1_str[10];
+
+    if (shut == 3){
+        strcpy(shut_str, "ON");
+    } else {
+        strcpy(shut_str, "OFF");
+    }
+
+    if (fan == 1){
+        strcpy(fan_str, "ON");
+    } else {
+        strcpy(fan_str, "OFF");
+    }
+
+    if (aux1 == 1){
+        strcpy(aux1_str, "ON");
+    } else {
+        strcpy(aux1_str, "OFF");
+    }
+
+    _crow_panel_controller->set_string_to_label(ui_shutdown, shut_str);
+    _crow_panel_controller->set_string_to_label(ui_fan, fan_str);
     _crow_panel_controller->set_value_to_label(ui_correctionlambda, lmbcorrect);
     _crow_panel_controller->set_value_to_label(ui_auxstatus9, brake);
-    _crow_panel_controller->set_value_to_label(ui_auxstatus1, aux1);
+    _crow_panel_controller->set_string_to_label(ui_auxstatus1, aux1_str);
 }
 
 void DataProcessor::send_serial_frame_3(int aux3, int aux4, int aux5, int aux6, int aux7, int aux8, int dig1){
     Serial.println("send_serial_frame_3");
 
-    _crow_panel_controller -> set_value_to_label(ui_auxstatus3, aux3);
-    _crow_panel_controller -> set_value_to_label(ui_auxstatus4, aux4);
-    _crow_panel_controller -> set_value_to_label(ui_auxstatus5, aux5);
-    _crow_panel_controller -> set_value_to_label(ui_auxstatus6, aux6);
-    _crow_panel_controller -> set_value_to_label(ui_auxstatus7, aux7);
-    _crow_panel_controller -> set_value_to_label(ui_auxstatus8, aux8);
-    _crow_panel_controller -> set_value_to_label(ui_digitalstatus1, dig1);    
+    char aux3_str[10];
+    char aux4_str[10];
+    char aux5_str[10];
+    char aux6_str[10];
+    char aux7_str[10];
+    char aux8_str[10];
+    char dig1_str[10];
+
+    if (aux3 == 1){
+        strcpy(aux3_str, "ON");
+    } else {
+        strcpy(aux3_str, "OFF");
+    }
+
+    if (aux4 == 1){
+
+        strcpy(aux4_str, "ON");
+    } else {
+        strcpy(aux4_str, "OFF");
+    }
+
+    if (aux5 == 1){
+        strcpy(aux5_str, "ON");
+    } else {
+        strcpy(aux5_str, "OFF");
+    }
+
+    if (aux6 == 1){
+        strcpy(aux6_str, "ON");
+    } else {
+        strcpy(aux6_str, "OFF");
+    }
+
+    if (aux7 == 1){
+        strcpy(aux7_str, "ON");
+    } else {
+        strcpy(aux7_str, "OFF");
+    }
+
+    if (aux8 == 1){
+        strcpy(aux8_str, "ON");
+    } else {
+        strcpy(aux8_str, "OFF");
+    }
+
+    if (dig1 == 1){
+        strcpy(dig1_str, "ON");
+    } else {
+        strcpy(dig1_str, "OFF");
+    }
+
+    _crow_panel_controller -> set_string_to_label(ui_auxstatus3, aux3_str);
+    _crow_panel_controller -> set_string_to_label(ui_auxstatus4, aux4_str);
+    _crow_panel_controller -> set_string_to_label(ui_auxstatus5, aux5_str);
+    _crow_panel_controller -> set_string_to_label(ui_auxstatus6, aux6_str);
+    _crow_panel_controller -> set_string_to_label(ui_auxstatus7, aux7_str);
+    _crow_panel_controller -> set_string_to_label(ui_auxstatus8, aux8_str);
+    _crow_panel_controller -> set_string_to_label(ui_digitalstatus1, dig1_str);
 }
 
 void DataProcessor::send_serial_frame_4(int dig3, int dig4, int dig5, int dig6, int dig7, int dig8, int dig9){
     Serial.println("send_serial_frame_4");
 
-    _crow_panel_controller -> set_value_to_label(ui_digitalstatus3, dig3);
-    _crow_panel_controller -> set_value_to_label(ui_digitalstatus4, dig4);
-    _crow_panel_controller -> set_value_to_label(ui_digitalstatus5, dig5);
-    _crow_panel_controller -> set_value_to_label(ui_digitalstatus6, dig6);
-    _crow_panel_controller -> set_value_to_label(ui_digitalstatus7, dig7);
-    _crow_panel_controller -> set_value_to_label(ui_digitalstatus8, dig8);
-    _crow_panel_controller -> set_value_to_label(ui_digitalstatus9, dig9);
+    char dig3_str[10];
+    char dig4_str[10];
+    char dig5_str[10];
+    char dig6_str[10];
+    char dig7_str[10];
+    char dig8_str[10];
+    char dig9_str[10];
+
+    if (dig3 == 1){
+        strcpy(dig3_str, "ON");
+    } else {
+        strcpy(dig3_str, "OFF");
+    }
+
+    if (dig4 == 1){
+        strcpy(dig4_str, "ON");
+    } else {
+        strcpy(dig4_str, "OFF");
+    }
+
+    if (dig5 == 1){
+        strcpy(dig5_str, "ON");
+    } else {
+        strcpy(dig5_str, "OFF");
+    }
+
+    if (dig6 == 1){
+        strcpy(dig6_str, "ON");
+    } else {
+        strcpy(dig6_str, "OFF");
+    }
+
+    if (dig7 == 1){
+        strcpy(dig7_str, "ON");
+    } else {
+        strcpy(dig7_str, "OFF");
+    }
+
+    if (dig8 == 1){
+        strcpy(dig8_str, "ON");
+    } else {
+        strcpy(dig8_str, "OFF");
+    }
+
+    if (dig9 == 1){
+        strcpy(dig9_str, "ON");
+    } else {
+        strcpy(dig9_str, "OFF");
+    }
+
+    _crow_panel_controller -> set_string_to_label(ui_digitalstatus3, dig3_str);
+    _crow_panel_controller -> set_string_to_label(ui_digitalstatus4, dig4_str);
+    _crow_panel_controller -> set_string_to_label(ui_digitalstatus5, dig5_str);
+    _crow_panel_controller -> set_string_to_label(ui_digitalstatus6, dig6_str);
+    _crow_panel_controller -> set_string_to_label(ui_digitalstatus7, dig7_str);
+    _crow_panel_controller -> set_string_to_label(ui_digitalstatus8, dig8_str);
+    _crow_panel_controller -> set_string_to_label(ui_digitalstatus9, dig9_str);
 }
 
 void DataProcessor::send_serial_screen_test(int test) {

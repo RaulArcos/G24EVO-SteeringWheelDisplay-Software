@@ -69,6 +69,10 @@ void CrowPanelController::set_value_to_label(lv_obj_t *label, double value)
     }
 }
 
+void CrowPanelController::set_string_to_label(lv_obj_t *label, const char *string){
+    lv_label_set_text(label, string);
+}
+
 void CrowPanelController::change_screen(lv_obj_t *screen){
     if (screen != NULL) {
         lv_disp_load_scr(screen);

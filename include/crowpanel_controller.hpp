@@ -95,6 +95,7 @@ public:
     CrowPanelController();
     static void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p);
     void set_value_to_label(lv_obj_t *label, double value);
+    void set_string_to_label(lv_obj_t *label, const char *string);
     void change_screen(lv_obj_t *screen);
 };
 
