@@ -47,9 +47,15 @@ void loop(){
     
     if (currentScreen == 1) {
         if (currentTime - lastScreenChange >= 10000) {
-            screenCycle = (screenCycle + 1) % 3; // Cycle through screens 2, 3, 4
-            currentScreen = screenCycle + 2; // Convert to actual screen number (2, 3, 4)
-            
+            currentScreen++;
+            crowPanelController.change_screen(ui_Screen2);
+            lastScreenChange = currentTime;
+            Serial.printf("Switched to Screen %d\n", currentScreen);
+        }
+    } else {
+        // Screens 2-4 stay for 1 second then back to screen 1
+        if (currentTime - lastScreenChange >= 2000) {
+            currentScreen++;
             switch(currentScreen) {
                 case 2:
                     crowPanelController.change_screen(ui_Screen2);
@@ -65,13 +71,10 @@ void loop(){
             lastScreenChange = currentTime;
             Serial.printf("Switched to Screen %d\n", currentScreen);
         }
-    } else {
-        // Screens 2-4 stay for 1 second then back to screen 1
-        if (currentTime - lastScreenChange >= 1000) {
+        if(currentScreen > 4){
             currentScreen = 1;
             crowPanelController.change_screen(ui_Screen1);
             lastScreenChange = currentTime;
-            Serial.println("Switched back to Screen 1");
         }
     }
 
