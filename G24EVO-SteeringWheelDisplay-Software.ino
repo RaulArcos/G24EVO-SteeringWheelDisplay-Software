@@ -13,6 +13,11 @@ G24WheelButtons wheelButtons;
 LedStrip ledStrip;
 CrowPanelController crowPanelController;
 
+// Screen rotation variables
+unsigned long lastScreenChange = 0;
+int currentScreen = 1;
+int screenCycle = 0; // 0 = screen1, 1 = screen2, 2 = screen3, 3 = screen4
+
 void setup() {
     Serial.begin(115200);
     while (!Serial) { delay(10); }
@@ -32,11 +37,44 @@ void setup() {
     // wheelButtons.begin();
    
     // xTaskCreate(wheelButtons.updateTask, "updateTask", 4096, &wheelButtons, 1, NULL);
+    
+    // Initialize with screen 1
+    lastScreenChange = millis();
 }
 
 void loop(){ 
+    unsigned long currentTime = millis();
+    
+    if (currentScreen == 1) {
+        if (currentTime - lastScreenChange >= 10000) {
+            screenCycle = (screenCycle + 1) % 3; // Cycle through screens 2, 3, 4
+            currentScreen = screenCycle + 2; // Convert to actual screen number (2, 3, 4)
+            
+            switch(currentScreen) {
+                case 2:
+                    crowPanelController.change_screen(ui_Screen2);
+                    break;
+                case 3:
+                    crowPanelController.change_screen(ui_Screen3);
+                    break;
+                case 4:
+                    crowPanelController.change_screen(ui_Screen4);
+                    break;
+            }
+            
+            lastScreenChange = currentTime;
+            Serial.printf("Switched to Screen %d\n", currentScreen);
+        }
+    } else {
+        // Screens 2-4 stay for 1 second then back to screen 1
+        if (currentTime - lastScreenChange >= 1000) {
+            currentScreen = 1;
+            crowPanelController.change_screen(ui_Screen1);
+            lastScreenChange = currentTime;
+            Serial.println("Switched back to Screen 1");
+        }
+    }
 
     lv_timer_handler();
     vTaskDelay(5);
-    Serial.println("loop");
 }
