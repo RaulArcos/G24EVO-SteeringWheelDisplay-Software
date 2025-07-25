@@ -18,13 +18,6 @@ void DataProcessor::send_serial(byte type, unsigned int value) {                
 //RPM + TPS + vBatt + ECT
 void DataProcessor::send_serial_frame_0(int rpmh, int rpml, int tpsh, int tpsl, int vbatth, int vbattl, int ect){
     Serial.println("send_serial_frame_0");
-    Serial.println(rpmh);
-    Serial.println(rpml);
-    Serial.println(tpsh);
-    Serial.println(tpsl);
-    Serial.println(vbatth);
-    Serial.println(vbattl);
-    Serial.println(ect);
     
     int rpm = (rpmh * 256) + rpml; 
     int tps = (tpsh * 256) + tpsl; 
@@ -49,30 +42,41 @@ void DataProcessor::send_serial_frame_1(int lmbh, int lmbl, int lmbth, int lmbtl
 }
 
 
-// void DataProcessor::send_serial_frame_2(int lambh, int lambl, int lamth, int lamtl, int bvolth, int bvoltl, int iat){
-//     byte dato[8] = { 0x5A, 0xA5, 0x05, 0x82, 0x00, 0x00, 0x00, 0x00 };
-//     dato[4] = LAMBDA_ID;
-//     dato[6] = lambh & 0xFF;
-//     dato[7] = lambl & 0xFF;
-//     Serial.write(dato, 8);
+void DataProcessor::send_serial_frame_2(int shut, int fan, int lmbch, int lmbcl, int brakeh, int brakel, int aux1){
+    Serial.println("send_serial_frame_2");
+    int lmbcorrect = (lmbch * 256) + lmbcl;
+    int brake = (brakeh * 256) + brakel;
 
-//     dato[4] = BVOLT_ID;
-//     dato[6] = bvolth & 0xFF;
-//     dato[7] = bvoltl & 0xFF;
-//     Serial.write(dato, 8);
+    _crow_panel_controller->set_value_to_label(ui_shutdown, shut);
+    _crow_panel_controller->set_value_to_label(ui_fan, fan);
+    _crow_panel_controller->set_value_to_label(ui_correctionlambda, lmbcorrect);
+    _crow_panel_controller->set_value_to_label(ui_auxstatus9, brake);
+    _crow_panel_controller->set_value_to_label(ui_auxstatus1, aux1);
+}
 
-//     dato[4] = IAT_ID;
-//     dato[6] = iat & 0xFF;
-//     dato[7] = 0;
-//     Serial.write(dato, 8);
-// }
+void DataProcessor::send_serial_frame_3(int aux3, int aux4, int aux5, int aux6, int aux7, int aux8, int dig1){
+    Serial.println("send_serial_frame_3");
 
-// void DataProcessor::send_serial_change_display(int display){
-//     byte dato[10] = { 0x5A, 0xA5, 0x07, 0x82, 0x00, 0x84, 0x5A, 0x01, 0x00, 0x00};
-//     const int displayIDs[] = { DISPLAY_0_ID, DISPLAY_1_ID, DISPLAY_2_ID, DISPLAY_3_ID, DISPLAY_4_ID };
-//     dato[9] = displayIDs[display];
-//     Serial.write(dato, 10);
-// }
+    _crow_panel_controller -> set_value_to_label(ui_auxstatus3, aux3);
+    _crow_panel_controller -> set_value_to_label(ui_auxstatus4, aux4);
+    _crow_panel_controller -> set_value_to_label(ui_auxstatus5, aux5);
+    _crow_panel_controller -> set_value_to_label(ui_auxstatus6, aux6);
+    _crow_panel_controller -> set_value_to_label(ui_auxstatus7, aux7);
+    _crow_panel_controller -> set_value_to_label(ui_auxstatus8, aux8);
+    _crow_panel_controller -> set_value_to_label(ui_digitalstatus1, dig1);    
+}
+
+void DataProcessor::send_serial_frame_4(int dig3, int dig4, int dig5, int dig6, int dig7, int dig8, int dig9){
+    Serial.println("send_serial_frame_4");
+
+    _crow_panel_controller -> set_value_to_label(ui_digitalstatus3, dig3);
+    _crow_panel_controller -> set_value_to_label(ui_digitalstatus4, dig4);
+    _crow_panel_controller -> set_value_to_label(ui_digitalstatus5, dig5);
+    _crow_panel_controller -> set_value_to_label(ui_digitalstatus6, dig6);
+    _crow_panel_controller -> set_value_to_label(ui_digitalstatus7, dig7);
+    _crow_panel_controller -> set_value_to_label(ui_digitalstatus8, dig8);
+    _crow_panel_controller -> set_value_to_label(ui_digitalstatus9, dig9);
+}
 
 void DataProcessor::send_serial_screen_test(int test) {
     _crow_panel_controller->set_value_to_label(ui_rpm, test);

@@ -199,9 +199,11 @@ void CAN::listen() {
                         case 1:
                             _data_processor->send_serial_frame_1(message.data[1], message.data[2], message.data[3], message.data[4], message.data[5], message.data[6], message.data[7]);
                             break;
-                        // case 2:
-                        //     _data_processor->send_serial_frame_2(message.data[1], message.data[2], message.data[3], message.data[4], message.data[5], message.data[6], message.data[7]);
-                        //     break;
+                        case 2:
+                             _data_processor->send_serial_frame_2(message.data[1], message.data[2], message.data[3], message.data[4], message.data[5], message.data[6], message.data[7]);
+                             break;
+                        case 3: 
+                            _data_processor->send_serial_frame_3(message.data[1], message.data[2], message.data[3], message.data[4], message.data[5], message.data[6], message.data[7]);
                         default:
                             break;
                     }
