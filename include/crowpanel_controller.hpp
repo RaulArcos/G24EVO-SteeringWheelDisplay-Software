@@ -103,6 +103,7 @@ public:
     void set_panel_color(lv_obj_t *panel, uint32_t bg_color);
     void set_conditional_colors();
     void set_panel_default_style(lv_obj_t *panel);  // Apply default dark grey panel styling
+    void update_rpm_bar(int rpm);  // Update RPM LED bar based on RPM (8000-12500 range)
     
     // Predefined colors for different conditions
     static const uint32_t COLOR_NORMAL = 0xFFFFFF;      // White

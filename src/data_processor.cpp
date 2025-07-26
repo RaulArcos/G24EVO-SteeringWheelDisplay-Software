@@ -28,14 +28,8 @@ void DataProcessor::send_serial_frame_0(int rpmh, int rpml, int tpsh, int tpsl, 
     _crow_panel_controller->set_value_to_label(ui_ect, ect);
     _crow_panel_controller->set_value_to_label(ui_ect2, ect);
     
-
-    if (rpm > 11000) {
-        _crow_panel_controller->set_label_color(ui_PanelRPM, CrowPanelController::COLOR_CRITICAL);  // Red for over-rev
-    } else if (rpm > 9000) {
-        _crow_panel_controller->set_label_color(ui_PanelRPM, CrowPanelController::COLOR_WARNING);   // Yellow for high RPM
-    } else {
-        _crow_panel_controller->set_label_color(ui_PanelRPM, CrowPanelController::COLOR_PANEL_DEFAULT);    // White for normal
-    }
+    // Update RPM LED bar (8000-12500 RPM range)
+    _crow_panel_controller->update_rpm_bar(rpm);
     
     // Battery voltage color (typical car battery: 12.6V resting, 13.2-14.4V running)
     if (vbatt < 11.5) {

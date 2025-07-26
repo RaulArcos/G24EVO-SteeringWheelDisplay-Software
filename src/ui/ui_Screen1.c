@@ -22,6 +22,25 @@ lv_obj_t * ui_shutdown = NULL;
 lv_obj_t * ui_PanelFAN = NULL;
 lv_obj_t * ui_FANLabel = NULL;
 lv_obj_t * ui_fan = NULL;
+
+// RPM LED Bar - 16 mini panels
+lv_obj_t * ui_RPMBar1 = NULL;
+lv_obj_t * ui_RPMBar2 = NULL;
+lv_obj_t * ui_RPMBar3 = NULL;
+lv_obj_t * ui_RPMBar4 = NULL;
+lv_obj_t * ui_RPMBar5 = NULL;
+lv_obj_t * ui_RPMBar6 = NULL;
+lv_obj_t * ui_RPMBar7 = NULL;
+lv_obj_t * ui_RPMBar8 = NULL;
+lv_obj_t * ui_RPMBar9 = NULL;
+lv_obj_t * ui_RPMBar10 = NULL;
+lv_obj_t * ui_RPMBar11 = NULL;
+lv_obj_t * ui_RPMBar12 = NULL;
+lv_obj_t * ui_RPMBar13 = NULL;
+lv_obj_t * ui_RPMBar14 = NULL;
+lv_obj_t * ui_RPMBar15 = NULL;
+lv_obj_t * ui_RPMBar16 = NULL;
+
 // event funtions
 
 // build funtions
@@ -31,11 +50,142 @@ void ui_Screen1_screen_init(void)
     ui_Screen1 = lv_obj_create(NULL);
     lv_obj_clear_flag(ui_Screen1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
+    // Create 16 RPM LED Bar panels across the top (8000-12500 RPM range)
+    // Each panel is 50px wide (800/16), 40px high, positioned at top
+    
+    ui_RPMBar1 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar1, 48);   // 50px - 2px margin
+    lv_obj_set_height(ui_RPMBar1, 35);
+    lv_obj_set_x(ui_RPMBar1, -375);     // Starting from left: -400 + 25
+    lv_obj_set_y(ui_RPMBar1, -220);
+    lv_obj_set_align(ui_RPMBar1, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar1, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar2 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar2, 48);
+    lv_obj_set_height(ui_RPMBar2, 35);
+    lv_obj_set_x(ui_RPMBar2, -325);
+    lv_obj_set_y(ui_RPMBar2, -220);
+    lv_obj_set_align(ui_RPMBar2, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar2, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar3 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar3, 48);
+    lv_obj_set_height(ui_RPMBar3, 35);
+    lv_obj_set_x(ui_RPMBar3, -275);
+    lv_obj_set_y(ui_RPMBar3, -220);
+    lv_obj_set_align(ui_RPMBar3, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar3, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar4 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar4, 48);
+    lv_obj_set_height(ui_RPMBar4, 35);
+    lv_obj_set_x(ui_RPMBar4, -225);
+    lv_obj_set_y(ui_RPMBar4, -220);
+    lv_obj_set_align(ui_RPMBar4, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar4, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar5 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar5, 48);
+    lv_obj_set_height(ui_RPMBar5, 35);
+    lv_obj_set_x(ui_RPMBar5, -175);
+    lv_obj_set_y(ui_RPMBar5, -220);
+    lv_obj_set_align(ui_RPMBar5, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar5, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar6 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar6, 48);
+    lv_obj_set_height(ui_RPMBar6, 35);
+    lv_obj_set_x(ui_RPMBar6, -125);
+    lv_obj_set_y(ui_RPMBar6, -220);
+    lv_obj_set_align(ui_RPMBar6, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar6, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar7 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar7, 48);
+    lv_obj_set_height(ui_RPMBar7, 35);
+    lv_obj_set_x(ui_RPMBar7, -75);
+    lv_obj_set_y(ui_RPMBar7, -220);
+    lv_obj_set_align(ui_RPMBar7, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar7, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar8 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar8, 48);
+    lv_obj_set_height(ui_RPMBar8, 35);
+    lv_obj_set_x(ui_RPMBar8, -25);
+    lv_obj_set_y(ui_RPMBar8, -220);
+    lv_obj_set_align(ui_RPMBar8, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar8, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar9 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar9, 48);
+    lv_obj_set_height(ui_RPMBar9, 35);
+    lv_obj_set_x(ui_RPMBar9, 25);
+    lv_obj_set_y(ui_RPMBar9, -220);
+    lv_obj_set_align(ui_RPMBar9, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar9, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar10 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar10, 48);
+    lv_obj_set_height(ui_RPMBar10, 35);
+    lv_obj_set_x(ui_RPMBar10, 75);
+    lv_obj_set_y(ui_RPMBar10, -220);
+    lv_obj_set_align(ui_RPMBar10, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar10, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar11 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar11, 48);
+    lv_obj_set_height(ui_RPMBar11, 35);
+    lv_obj_set_x(ui_RPMBar11, 125);
+    lv_obj_set_y(ui_RPMBar11, -220);
+    lv_obj_set_align(ui_RPMBar11, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar11, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar12 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar12, 48);
+    lv_obj_set_height(ui_RPMBar12, 35);
+    lv_obj_set_x(ui_RPMBar12, 175);
+    lv_obj_set_y(ui_RPMBar12, -220);
+    lv_obj_set_align(ui_RPMBar12, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar12, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar13 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar13, 48);
+    lv_obj_set_height(ui_RPMBar13, 35);
+    lv_obj_set_x(ui_RPMBar13, 225);
+    lv_obj_set_y(ui_RPMBar13, -220);
+    lv_obj_set_align(ui_RPMBar13, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar13, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar14 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar14, 48);
+    lv_obj_set_height(ui_RPMBar14, 35);
+    lv_obj_set_x(ui_RPMBar14, 275);
+    lv_obj_set_y(ui_RPMBar14, -220);
+    lv_obj_set_align(ui_RPMBar14, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar14, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar15 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar15, 48);
+    lv_obj_set_height(ui_RPMBar15, 35);
+    lv_obj_set_x(ui_RPMBar15, 325);
+    lv_obj_set_y(ui_RPMBar15, -220);
+    lv_obj_set_align(ui_RPMBar15, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar15, LV_OBJ_FLAG_SCROLLABLE);
+
+    ui_RPMBar16 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_RPMBar16, 48);
+    lv_obj_set_height(ui_RPMBar16, 35);
+    lv_obj_set_x(ui_RPMBar16, 375);
+    lv_obj_set_y(ui_RPMBar16, -220);
+    lv_obj_set_align(ui_RPMBar16, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_RPMBar16, LV_OBJ_FLAG_SCROLLABLE);
+
     ui_PanelGear = lv_obj_create(ui_Screen1);
     lv_obj_set_width(ui_PanelGear, 229);
     lv_obj_set_height(ui_PanelGear, 290);
     lv_obj_set_x(ui_PanelGear, 0);
-    lv_obj_set_y(ui_PanelGear, 41);
+    lv_obj_set_y(ui_PanelGear, 91);  // Moved down from 41
     lv_obj_set_align(ui_PanelGear, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_PanelGear, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
@@ -54,9 +204,9 @@ void ui_Screen1_screen_init(void)
 
     ui_PanelRPM = lv_obj_create(ui_Screen1);
     lv_obj_set_width(ui_PanelRPM, 778);
-    lv_obj_set_height(ui_PanelRPM, 116);
+    lv_obj_set_height(ui_PanelRPM, 126);
     lv_obj_set_x(ui_PanelRPM, 0);
-    lv_obj_set_y(ui_PanelRPM, -173);
+    lv_obj_set_y(ui_PanelRPM, -133);  // Moved down from -173
     lv_obj_set_align(ui_PanelRPM, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_PanelRPM, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
@@ -75,7 +225,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_width(ui_PanelBATT, 258);
     lv_obj_set_height(ui_PanelBATT, 130);
     lv_obj_set_x(ui_PanelBATT, -255);
-    lv_obj_set_y(ui_PanelBATT, -37);
+    lv_obj_set_y(ui_PanelBATT, 13);  // Moved down from -37
     lv_obj_set_align(ui_PanelBATT, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_PanelBATT, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
@@ -103,7 +253,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_width(ui_PanelETC, 258);
     lv_obj_set_height(ui_PanelETC, 128);
     lv_obj_set_x(ui_PanelETC, 254);
-    lv_obj_set_y(ui_PanelETC, -38);
+    lv_obj_set_y(ui_PanelETC, 12);  // Moved down from -38
     lv_obj_set_align(ui_PanelETC, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_PanelETC, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
@@ -131,7 +281,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_width(ui_PanelSHUTDOWN, 259);
     lv_obj_set_height(ui_PanelSHUTDOWN, 52);
     lv_obj_set_x(ui_PanelSHUTDOWN, -256);
-    lv_obj_set_y(ui_PanelSHUTDOWN, 63);
+    lv_obj_set_y(ui_PanelSHUTDOWN, 113);  // Moved down from 63
     lv_obj_set_align(ui_PanelSHUTDOWN, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_PanelSHUTDOWN, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
@@ -159,7 +309,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_width(ui_PanelFAN, 255);
     lv_obj_set_height(ui_PanelFAN, 52);
     lv_obj_set_x(ui_PanelFAN, 254);
-    lv_obj_set_y(ui_PanelFAN, 61);
+    lv_obj_set_y(ui_PanelFAN, 111);  // Moved down from 61
     lv_obj_set_align(ui_PanelFAN, LV_ALIGN_CENTER);
     lv_obj_clear_flag(ui_PanelFAN, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
@@ -207,5 +357,22 @@ void ui_Screen1_screen_destroy(void)
     ui_PanelFAN = NULL;
     ui_FANLabel = NULL;
     ui_fan = NULL;
-
+    
+    // RPM Bar panels
+    ui_RPMBar1 = NULL;
+    ui_RPMBar2 = NULL;
+    ui_RPMBar3 = NULL;
+    ui_RPMBar4 = NULL;
+    ui_RPMBar5 = NULL;
+    ui_RPMBar6 = NULL;
+    ui_RPMBar7 = NULL;
+    ui_RPMBar8 = NULL;
+    ui_RPMBar9 = NULL;
+    ui_RPMBar10 = NULL;
+    ui_RPMBar11 = NULL;
+    ui_RPMBar12 = NULL;
+    ui_RPMBar13 = NULL;
+    ui_RPMBar14 = NULL;
+    ui_RPMBar15 = NULL;
+    ui_RPMBar16 = NULL;
 }

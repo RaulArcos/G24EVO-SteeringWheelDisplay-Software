@@ -30,6 +30,25 @@ extern lv_obj_t * ui_shutdown;
 extern lv_obj_t * ui_PanelFAN;
 extern lv_obj_t * ui_FANLabel;
 extern lv_obj_t * ui_fan;
+
+// RPM LED Bar - 16 mini panels
+extern lv_obj_t * ui_RPMBar1;
+extern lv_obj_t * ui_RPMBar2;
+extern lv_obj_t * ui_RPMBar3;
+extern lv_obj_t * ui_RPMBar4;
+extern lv_obj_t * ui_RPMBar5;
+extern lv_obj_t * ui_RPMBar6;
+extern lv_obj_t * ui_RPMBar7;
+extern lv_obj_t * ui_RPMBar8;
+extern lv_obj_t * ui_RPMBar9;
+extern lv_obj_t * ui_RPMBar10;
+extern lv_obj_t * ui_RPMBar11;
+extern lv_obj_t * ui_RPMBar12;
+extern lv_obj_t * ui_RPMBar13;
+extern lv_obj_t * ui_RPMBar14;
+extern lv_obj_t * ui_RPMBar15;
+extern lv_obj_t * ui_RPMBar16;
+
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus
