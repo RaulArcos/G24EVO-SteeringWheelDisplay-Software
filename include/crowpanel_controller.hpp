@@ -97,6 +97,21 @@ public:
     void set_value_to_label(lv_obj_t *label, double value);
     void set_string_to_label(lv_obj_t *label, const char *string);
     void change_screen(lv_obj_t *screen);
+    
+    // New methods for conditional color management
+    void set_label_color(lv_obj_t *label, uint32_t color);
+    void set_panel_color(lv_obj_t *panel, uint32_t bg_color);
+    void set_conditional_colors();
+    void set_panel_default_style(lv_obj_t *panel);  // Apply default dark grey panel styling
+    
+    // Predefined colors for different conditions
+    static const uint32_t COLOR_NORMAL = 0xFFFFFF;      // White
+    static const uint32_t COLOR_WARNING = 0xFFFF00;     // Yellow  
+    static const uint32_t COLOR_CRITICAL = 0xFF0000;    // Red
+    static const uint32_t COLOR_GOOD = 0x00FF00;        // Green
+    static const uint32_t COLOR_INFO = 0xFF8500;        // Orange (current label color)
+    static const uint32_t COLOR_BLUE = 0x0080FF;        // Blue
+    static const uint32_t COLOR_PANEL_DEFAULT = 0x2C2C2C;  // Dark grey for panel backgrounds
 };
 
 

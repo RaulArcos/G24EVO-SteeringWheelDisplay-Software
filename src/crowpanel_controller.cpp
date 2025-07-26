@@ -13,6 +13,7 @@ CrowPanelController::CrowPanelController()
     pinMode(38, OUTPUT);
     digitalWrite(38, LOW);
     lcd.begin();
+    lcd.setRotation(2);  // Rotate display 180 degrees (upside down)
     lcd.fillScreen(TFT_BLACK);
     delay(200);
 
@@ -76,5 +77,32 @@ void CrowPanelController::set_string_to_label(lv_obj_t *label, const char *strin
 void CrowPanelController::change_screen(lv_obj_t *screen){
     if (screen != NULL) {
         lv_disp_load_scr(screen);
+    }
+}
+
+// New color management methods
+void CrowPanelController::set_label_color(lv_obj_t *label, uint32_t color) {
+    if (label != NULL) {
+        lv_obj_set_style_text_color(label, lv_color_hex(color), LV_PART_MAIN | LV_STATE_DEFAULT);
+    }
+}
+
+void CrowPanelController::set_panel_color(lv_obj_t *panel, uint32_t bg_color) {
+    if (panel != NULL) {
+        lv_obj_set_style_bg_color(panel, lv_color_hex(bg_color), LV_PART_MAIN | LV_STATE_DEFAULT);
+    }
+}
+
+void CrowPanelController::set_conditional_colors() {
+    // This method will be called from data_processor.cpp to update colors based on conditions
+    // Implementation will be added when specific conditions are defined
+}
+
+void CrowPanelController::set_panel_default_style(lv_obj_t *panel) {
+    if (panel != NULL) {
+        lv_obj_set_style_bg_color(panel, lv_color_hex(COLOR_PANEL_DEFAULT), LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_bg_opa(panel, LV_OPA_COVER, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_border_width(panel, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_border_color(panel, lv_color_hex(0x404040), LV_PART_MAIN | LV_STATE_DEFAULT);  // Slightly lighter border
     }
 }

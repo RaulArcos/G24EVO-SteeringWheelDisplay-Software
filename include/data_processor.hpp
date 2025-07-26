@@ -31,6 +31,8 @@ public:
 private:
     LedStrip *_led_strip;
     CrowPanelController *_crow_panel_controller;
+    int current_display=0;
+    bool change_screen_requested=false;
 };
 
 #endif

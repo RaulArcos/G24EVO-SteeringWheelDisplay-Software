@@ -27,6 +27,41 @@ void DataProcessor::send_serial_frame_0(int rpmh, int rpml, int tpsh, int tpsl, 
     _crow_panel_controller->set_value_to_label(ui_battvolt, vbatt);
     _crow_panel_controller->set_value_to_label(ui_ect, ect);
     _crow_panel_controller->set_value_to_label(ui_ect2, ect);
+    
+
+    if (rpm > 11000) {
+        _crow_panel_controller->set_label_color(ui_PanelRPM, CrowPanelController::COLOR_CRITICAL);  // Red for over-rev
+    } else if (rpm > 9000) {
+        _crow_panel_controller->set_label_color(ui_PanelRPM, CrowPanelController::COLOR_WARNING);   // Yellow for high RPM
+    } else {
+        _crow_panel_controller->set_label_color(ui_PanelRPM, CrowPanelController::COLOR_PANEL_DEFAULT);    // White for normal
+    }
+    
+    // Battery voltage color (typical car battery: 12.6V resting, 13.2-14.4V running)
+    if (vbatt < 11.5) {
+        _crow_panel_controller->set_label_color(ui_battvolt, CrowPanelController::COLOR_CRITICAL);  // Red for low
+    } else if (vbatt < 12.0) {
+        _crow_panel_controller->set_label_color(ui_battvolt, CrowPanelController::COLOR_WARNING);   // Yellow for warning
+    } else if (vbatt > 15.0) {
+        _crow_panel_controller->set_label_color(ui_battvolt, CrowPanelController::COLOR_WARNING);   // Yellow for overcharge
+    } else {
+        _crow_panel_controller->set_label_color(ui_battvolt, CrowPanelController::COLOR_NORMAL);      // Green for good
+    }
+    
+    // Engine coolant temperature (typical range: 80-105°C normal operating temp)
+    if (ect > 105) {
+        _crow_panel_controller->set_label_color(ui_ect, CrowPanelController::COLOR_CRITICAL);   // Red for overheating
+        _crow_panel_controller->set_label_color(ui_ect2, CrowPanelController::COLOR_CRITICAL);
+    } else if (ect > 95) {
+        _crow_panel_controller->set_label_color(ui_ect, CrowPanelController::COLOR_WARNING);    // Yellow for warm
+        _crow_panel_controller->set_label_color(ui_ect2, CrowPanelController::COLOR_WARNING);
+    } else if (ect < 60) {
+        _crow_panel_controller->set_label_color(ui_ect, CrowPanelController::COLOR_BLUE);       // Blue for cold engine
+        _crow_panel_controller->set_label_color(ui_ect2, CrowPanelController::COLOR_BLUE);
+    } else {
+        _crow_panel_controller->set_label_color(ui_ect, CrowPanelController::COLOR_NORMAL);       // Green for normal temp
+        _crow_panel_controller->set_label_color(ui_ect2, CrowPanelController::COLOR_NORMAL);
+    }
 }
 
 //LAMB + LAMBTRG + FUEL + GEAR
@@ -38,7 +73,7 @@ void DataProcessor::send_serial_frame_1(int lmbh, int lmbl, int lmbth, int lmbtl
    _crow_panel_controller->set_value_to_label(ui_lambda, lmb);
    _crow_panel_controller->set_value_to_label(ui_lambdatarget, lmbtrg);
    _crow_panel_controller->set_value_to_label(ui_fuel, fuel);
-   _crow_panel_controller->set_value_to_label(ui_gear, gear);
+//    _crow_panel_controller->set_value_to_label(ui_gear, gear);
 }
 
 
@@ -64,16 +99,43 @@ void DataProcessor::send_serial_frame_2(int shut, int fan, int lmbch, int lmbcl,
     }
 
     if (aux1 == 1){
-        strcpy(aux1_str, "ON");
+        strcpy(aux1_str, "N");
+        _crow_panel_controller->set_label_color(ui_PanelGear, CrowPanelController::COLOR_GOOD);
     } else {
-        strcpy(aux1_str, "OFF");
+        strcpy(aux1_str, "D");
+        _crow_panel_controller->set_label_color(ui_PanelGear, CrowPanelController::COLOR_PANEL_DEFAULT);
     }
+
+    
 
     _crow_panel_controller->set_string_to_label(ui_shutdown, shut_str);
     _crow_panel_controller->set_string_to_label(ui_fan, fan_str);
     _crow_panel_controller->set_value_to_label(ui_correctionlambda, lmbcorrect);
     _crow_panel_controller->set_value_to_label(ui_auxstatus9, brake);
-    _crow_panel_controller->set_string_to_label(ui_auxstatus1, aux1_str);
+    _crow_panel_controller->set_string_to_label(ui_gear, aux1_str);
+    
+    // Shutdown status color
+    if (shut == 3) {
+        _crow_panel_controller->set_label_color(ui_shutdown, CrowPanelController::COLOR_CRITICAL);  // Red when shutdown is ON (emergency)
+    } else {
+        _crow_panel_controller->set_label_color(ui_shutdown, CrowPanelController::COLOR_GOOD);      // Green when shutdown is OFF (normal)
+    }
+    
+    // Fan status color
+    if (fan == 1) {
+        _crow_panel_controller->set_label_color(ui_fan, CrowPanelController::COLOR_BLUE);          // Blue when fan is ON (cooling)
+    } else {
+        _crow_panel_controller->set_label_color(ui_fan, CrowPanelController::COLOR_NORMAL);        // White when fan is OFF
+    }
+    
+    // Brake pressure color (assuming brake > 0 means brakes applied)
+    if (brake > 100) {  // Adjust threshold as needed
+        _crow_panel_controller->set_label_color(ui_auxstatus9, CrowPanelController::COLOR_WARNING); // Yellow for heavy braking
+    } else if (brake > 0) {
+        _crow_panel_controller->set_label_color(ui_auxstatus9, CrowPanelController::COLOR_NORMAL);  // White for light braking
+    } else {
+        _crow_panel_controller->set_label_color(ui_auxstatus9, CrowPanelController::COLOR_GOOD);    // Green for no braking
+    }
 }
 
 void DataProcessor::send_serial_frame_3(int aux3, int aux4, int aux5, int aux6, int aux7, int aux8, int dig1){
@@ -131,6 +193,30 @@ void DataProcessor::send_serial_frame_3(int aux3, int aux4, int aux5, int aux6, 
     }
 
     _crow_panel_controller -> set_string_to_label(ui_auxstatus3, aux3_str);
+    if(aux3 == 1 && change_screen_requested == false){
+        switch(current_display){
+            case 0:
+                _crow_panel_controller->change_screen(ui_Screen1);
+                break;
+            case 1:
+                _crow_panel_controller->change_screen(ui_Screen2);
+                break;
+            case 2:
+                _crow_panel_controller->change_screen(ui_Screen3);
+                break;
+            case 3:
+                _crow_panel_controller->change_screen(ui_Screen4);
+                break;
+        }
+        current_display++;
+        change_screen_requested = true;
+        if(current_display > 3){
+            current_display = 0;
+        }
+    }else if(aux3 == 0 && change_screen_requested == true){
+        change_screen_requested = false;
+    }
+
     _crow_panel_controller -> set_string_to_label(ui_auxstatus4, aux4_str);
     _crow_panel_controller -> set_string_to_label(ui_auxstatus5, aux5_str);
     _crow_panel_controller -> set_string_to_label(ui_auxstatus6, aux6_str);

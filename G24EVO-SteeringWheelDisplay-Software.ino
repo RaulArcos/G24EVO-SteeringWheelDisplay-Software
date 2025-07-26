@@ -43,41 +43,6 @@ void setup() {
 }
 
 void loop(){ 
-    unsigned long currentTime = millis();
-    
-    if (currentScreen == 1) {
-        if (currentTime - lastScreenChange >= 10000) {
-            currentScreen++;
-            crowPanelController.change_screen(ui_Screen2);
-            lastScreenChange = currentTime;
-            Serial.printf("Switched to Screen %d\n", currentScreen);
-        }
-    } else {
-        // Screens 2-4 stay for 1 second then back to screen 1
-        if (currentTime - lastScreenChange >= 2000) {
-            currentScreen++;
-            switch(currentScreen) {
-                case 2:
-                    crowPanelController.change_screen(ui_Screen2);
-                    break;
-                case 3:
-                    crowPanelController.change_screen(ui_Screen3);
-                    break;
-                case 4:
-                    crowPanelController.change_screen(ui_Screen4);
-                    break;
-            }
-            
-            lastScreenChange = currentTime;
-            Serial.printf("Switched to Screen %d\n", currentScreen);
-        }
-        if(currentScreen > 4){
-            currentScreen = 1;
-            crowPanelController.change_screen(ui_Screen1);
-            lastScreenChange = currentTime;
-        }
-    }
-
     lv_timer_handler();
     vTaskDelay(5);
 }
